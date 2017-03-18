@@ -13,8 +13,7 @@ public class RespostaService {
 	@GET 
 	@Path("/resposta") 
 	@Produces(MediaType.APPLICATION_XML) 
-	public Resposta getResposta(){ 
-		Resposta resposta = new Resposta();
+	public Resposta getResposta(Resposta resposta){ 
 		
 		return resposta;
 	}  
