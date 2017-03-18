@@ -6,12 +6,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import Model.Resposta;  
-@Path("/UserService") 
+@Path("/RespostaService") 
 
 public class RespostaService {  
 	
 	@GET 
-	@Path("/users") 
+	@Path("/resposta") 
 	@Produces(MediaType.APPLICATION_XML) 
 	public Resposta getResposta(){ 
 		Resposta resposta = new Resposta();
