@@ -9,9 +9,9 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
-	<context-param>
+	<!-- context-param>
 	    <param-name>resteasy.scan</param-name>
-	    <param-value>false</param-value>
+	    <param-value>tur</param-value>
 	</context-param>
 	<context-param>
 	    <param-name>resteasy.scan.providers</param-name>
@@ -20,5 +20,5 @@
 	<context-param>
 	    <param-name>resteasy.scan.resources</param-name>
 	    <param-value>false</param-value>
-	</context-param>
+	</context-param-->
 </web-app>
