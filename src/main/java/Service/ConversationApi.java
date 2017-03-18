@@ -13,12 +13,13 @@
 package Service;
 
 import java.util.Map;
+import Model.Resposta;
 
 import com.ibm.watson.developer_cloud.conversation.v1.ConversationService;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.http.ServiceCallback;
-
+import java.util.*;
 import jersey.repackaged.jsr166e.CompletableFuture;
 
 /**
@@ -27,23 +28,42 @@ import jersey.repackaged.jsr166e.CompletableFuture;
  *
  * @version v1-experimental
  */
-public class ConversationExample {
-
-  public static void main(String[] args) throws Exception {
-    ConversationService service = new ConversationService(ConversationService.VERSION_DATE_2017_02_03);
-    service.setUsernameAndPassword("<username>", "<password>");
+public class ConversationApi {
+  private static String _Message = "";
+  private static List<String> _Result;
+  private static MessageResponse _LastResponse;
+  
+  public static Resposta GetResposa(Resposta pergunta) throws Exception {
+    
+	  if (_Message == null || _Message == "");
+	  {
+		  _Message = "Oi";
+	  }
+	  _Message =   pergunta.getDescResposta();
+	
+	Resposta resposta = new Resposta();
+	
+	ConversationService service = new ConversationService(ConversationService.VERSION_DATE_2017_02_03);
+    service.setUsernameAndPassword("46cd8050-1cab-4f52-96be-1ee62098e596", "HEbdacsfbSLi");
 
     // sync
-    MessageRequest newMessage = new MessageRequest.Builder().inputText("Hi").build();
-    MessageResponse response = service.message("<workspace-id>", newMessage).execute();
-    System.out.println(response);
-
-
+    MessageRequest newMessage = new MessageRequest.Builder().inputText(_Message).build();
+   
+    if (_LastResponse != null)
+    {
+       newMessage = new MessageRequest.Builder().inputText(_Message).context(_LastResponse.getContext()).build();
+    }
+    MessageResponse response = service.message("4a05e64b-1322-4968-a9cf-fa18cbf0b148", newMessage).execute();
+   
+    _Result = response.getText();
+    //System.out.println(response);
+    
     // async
-    service.message("<workspace-id>", newMessage).enqueue(new ServiceCallback<MessageResponse>() {
+    service.message("4a05e64b-1322-4968-a9cf-fa18cbf0b148", newMessage).enqueue(new ServiceCallback<MessageResponse>() {
       
       public void onResponse(MessageResponse response) {
-        System.out.println(response);
+    	  _Result = response.getText();
+    	    //System.out.println(response);
       }
 
       
@@ -51,11 +71,14 @@ public class ConversationExample {
     });
 
     // rx callback
-    service.message("<workspace-id>", newMessage).rx()
+    service.message("4a05e64b-1322-4968-a9cf-fa18cbf0b148", newMessage).rx()
         .thenApply(new CompletableFuture.Fun<MessageResponse, Map<String, Object>>() {
           
           public Map<String, Object> apply(MessageResponse message) {
-            return message.getOutput();
+        	  return message.getOutput();
+        	    //System.out.println(response);  
+          ///return message.getOutput();
+            
           }
         }).thenAccept(new CompletableFuture.Action<Map<String, Object>>() {
           
@@ -65,7 +88,7 @@ public class ConversationExample {
         });
 
     // rx async callback
-    service.message("<workspace-id>", newMessage).rx()
+    service.message("4a05e64b-1322-4968-a9cf-fa18cbf0b148", newMessage).rx()
         .thenApplyAsync(new CompletableFuture.Fun<MessageResponse, Map<String, Object>>() {
           
           public Map<String, Object> apply(MessageResponse message) {
@@ -79,8 +102,12 @@ public class ConversationExample {
         });
 
     // rx sync
-    MessageResponse rxMessageResponse = service.message("<workspace-id>", newMessage).rx().get();
+    MessageResponse rxMessageResponse = service.message("4a05e64b-1322-4968-a9cf-fa18cbf0b148", newMessage).rx().get();
     System.out.println(rxMessageResponse);
+    _LastResponse = response;
+    
+    resposta.setDescResposta(_Result.get(0));
+    return resposta;
   }
 
 }
