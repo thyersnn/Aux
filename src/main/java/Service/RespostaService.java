@@ -13,11 +13,12 @@ public class RespostaService {
 	@GET 
 	@Path("/resposta") 
 	@Produces(MediaType.APPLICATION_XML) 
+
 	public Resposta getResposta(Resposta pergunta)throws Exception {
 		Resposta resposta = new Resposta();		
 		
 		resposta = ConversationApi.GetResposa(pergunta);
-		
+
 		return resposta;
 
 	}  
